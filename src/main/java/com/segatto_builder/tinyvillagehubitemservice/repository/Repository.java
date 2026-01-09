@@ -13,13 +13,19 @@ public interface Repository extends MongoRepository<Item, String> {
 
     // Basic queries (same method names)
     Optional<Item> findByIdAndOwnerId(String id, UUID ownerId);
+
     List<Item> findByOwnerId(UUID ownerId);
+
     List<Item> findByOwnerIdAndStatusNot(UUID ownerId, Status status);
+
     List<Item> findByStatus(Status status);
 
     // Location-based queries (same method names work!)
     List<Item> findByStatusAndOwnerCityIgnoreCase(Status status, String city);
+
     List<Item> findByStatusAndOwnerNeighbourhoodIgnoreCase(Status status, String neighbourhood);
+
     List<Item> findByStatusAndOwnerStateIgnoreCase(Status status, String state);
+
     List<Item> findByStatusAndOwnerCountryIgnoreCase(Status status, String country);
 }

@@ -24,36 +24,6 @@ public class Service implements IService {
     private final IStorageService storageService;
 
     @Override
-    @Transactional(readOnly = true)
-    public Optional<Item> getItemById(String itemId) {
-        return repository.findById(itemId);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<Item> getItemByIdAndOwner(String itemId, UUID ownerId) {
-        return repository.findByIdAndOwnerId(itemId, ownerId);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Item> getItemsByOwner(UUID ownerId) {
-        return repository.findByOwnerId(ownerId);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Item> getItemsByStatus(Status status) {
-        return repository.findByStatus(status);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Item> getActiveItems() {
-        return repository.findByStatus(Status.ACTIVE);
-    }
-
-    @Override
     public void updateStatus(String itemId, Status newStatus, UUID ownerId) {
         Item item = findByIdAndValidateOwnership(itemId, ownerId);
         Status oldStatus = item.getStatus();
@@ -134,13 +104,10 @@ public class Service implements IService {
     public void deleteImage(String itemId, int index, UUID ownerId) {
         Item item = findByIdAndValidateOwnership(itemId, ownerId);
 
-        // Get URL before removing (for R2 cleanup)
         String urlToDelete = item.removeImageUrl(index); // Throws exception if invalid index
 
-        // Delete from R2
         storageService.deleteFile(urlToDelete);
 
-        // Save changes
         repository.save(item);
 
         log.info("DELETED_IMAGE by userId: {} (itemId: {}) - index: {}", ownerId, itemId, index);
