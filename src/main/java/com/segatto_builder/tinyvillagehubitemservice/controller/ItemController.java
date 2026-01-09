@@ -66,9 +66,9 @@ public class ItemController {
         return ResponseEntity.ok(List.of());
     }
 
-    @GetMapping("/my")
+    @GetMapping("/my-items")
     public ResponseEntity<List<ResponseDto>> getMyItems(@RequestHeader("X-User-Id") UUID userId) {
-        List<ResponseDto> items = itemService.findAllByOwnerId(userId);
+        List<ResponseDto> items = itemService.findByOwnerId(userId);
         return ResponseEntity.ok(items);
     }
 

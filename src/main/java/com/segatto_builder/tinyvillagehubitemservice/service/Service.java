@@ -101,8 +101,8 @@ public class Service implements IService {
     }
 
     @Override
-    public List<ResponseDto> findAllByOwnerId(UUID ownerId) {
-        List<Item> items = repository.findByOwnerId(ownerId);
+    public List<ResponseDto> findByOwnerId(UUID ownerId) {
+        List<Item> items = repository.findByOwnerIdAndStatusNot(ownerId, Status.DELETED);
         return mapper.toResponseList(items);
     }
 
@@ -195,10 +195,11 @@ public class Service implements IService {
     private void validateStatusTransition(Status from, Status to) {
         // Status transitions rule
         Map<Status, Set<Status>> allowedTransitions = Map.of(
-                Status.INACTIVE, Set.of(Status.ACTIVE),
-                Status.ACTIVE, Set.of(Status.INACTIVE, Status.PENDING, Status.COMPLETED),
-                Status.PENDING, Set.of(Status.ACTIVE, Status.INACTIVE, Status.COMPLETED),
-                Status.COMPLETED, Set.of()
+                Status.INACTIVE, Set.of(Status.ACTIVE, Status.DELETED),
+                Status.ACTIVE, Set.of(Status.INACTIVE, Status.PENDING, Status.COMPLETED, Status.DELETED),
+                Status.PENDING, Set.of(Status.ACTIVE, Status.INACTIVE, Status.COMPLETED, Status.DELETED),
+                Status.COMPLETED, Set.of(Status.DELETED),
+                Status.DELETED, Set.of(Status.INACTIVE) //TODO Review future options.
         );
 
         if (!allowedTransitions.get(from).contains(to)) {

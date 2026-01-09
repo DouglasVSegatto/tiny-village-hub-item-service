@@ -32,7 +32,7 @@ public interface IService {
 
     ResponseDto findById(String itemId);
 
-    List<ResponseDto> findAllByOwnerId(UUID ownerId);
+    List<ResponseDto> findByOwnerId(UUID ownerId);
 
     List<ResponseDto> listByCity(String city);
 

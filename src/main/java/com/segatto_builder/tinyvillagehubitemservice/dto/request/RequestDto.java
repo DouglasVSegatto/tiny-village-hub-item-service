@@ -19,6 +19,7 @@ public class RequestDto {
       "type": "ELECTRONICS",
       "availabilityType": "FOR_SALE",
       "condition": "NEW",
+      "status": "ACTIVE",
       "ownerNeighbourhood": "Downtown",
       "ownerCity": "Seattle",
       "ownerState": "Washington",
