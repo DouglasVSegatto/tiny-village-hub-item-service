@@ -1,0 +1,33 @@
+# Stage 1: Build
+FROM gradle:8.5.0-jdk21-alpine AS build
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the Gradle wrapper and configuration files
+COPY gradlew .
+COPY gradle ./gradle
+COPY build.gradle settings.gradle ./
+
+# Copy the source code
+COPY src ./src
+
+# Make the wrapper executable
+RUN chmod +x gradlew
+
+# Build the Spring Boot JAR
+RUN ./gradlew bootJar -x test
+
+# Stage 2: Create the final runtime image
+FROM amazoncorretto:21-alpine
+
+# Define where the JAR is
+ARG JAR_FILE=/app/build/libs/*.jar
+
+# Copy the built JAR from the 'build' stage
+COPY --from=build ${JAR_FILE} app.jar
+
+EXPOSE 8080
+
+# Run the app
+ENTRYPOINT ["java","-jar","/app.jar"]

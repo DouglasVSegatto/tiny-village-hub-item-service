@@ -1,0 +1,20 @@
+name: Items Service Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: item-service-runner
+    steps:
+      - name: 1. Checkout Items Service Code
+        uses: actions/checkout@v4
+        with:
+          path: .
+
+      - name: 2. Deploy Service via Dockge/Compose
+        run: |
+          cd /opt/stacks/web-project
+          docker compose up -d --build --no-deps items-service
