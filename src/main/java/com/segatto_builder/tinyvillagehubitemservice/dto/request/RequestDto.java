@@ -14,10 +14,10 @@ public class RequestDto {
 
     /* Json Example
     {
-      "name": "iPhone 15 Pro",
-      "description": "Brand new iPhone 15 Pro, 256GB, Space Black. Excellent condition, includes original box and charger.",
-      "type": "ELECTRONICS",
-      "availabilityType": "FOR_SALE",
+      "name": "Harry Potter Book 1",
+      "description": "Brand new Book",
+      "type": "BOOK",
+      "availabilityType": "TRADE",
       "condition": "NEW",
       "status": "ACTIVE",
       "ownerNeighbourhood": "Downtown",
