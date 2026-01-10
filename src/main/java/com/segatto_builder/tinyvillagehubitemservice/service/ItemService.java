@@ -8,16 +8,17 @@ import com.segatto_builder.tinyvillagehubitemservice.model.enums.Status;
 import com.segatto_builder.tinyvillagehubitemservice.repository.Repository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
 @Slf4j
-@org.springframework.stereotype.Service
+@Service
 @RequiredArgsConstructor
 @Transactional
-public class Service implements IService {
+public class ItemService implements IService {
 
     private final Repository repository;
     private final Mapper mapper;
