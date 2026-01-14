@@ -34,8 +34,8 @@ public class ItemService implements IService {
         item.setStatus(newStatus);
         repository.save(item);
 
-        log.info("UPDATED_STATUS from {} to {} by userId: {} (itemId: {})",
-                oldStatus, newStatus, ownerId, item.getId());
+        log.info("UPDATED_STATUS from {} to {} by userId: {}, role: {} (itemId: {})",
+                oldStatus, newStatus, ownerId, userRole, item.getId());
 
         //TODO: Handle Completed status change for questioner or rating etc...
     }
@@ -54,13 +54,13 @@ public class ItemService implements IService {
         Item item = findByIdAndValidateOwnership(itemId, ownerId, userRole);
         mapper.updateEntityFromDto(dto, item);
         repository.save(item);
-        log.info("UPDATED_ITEM by userId: {} (itemId: {})", ownerId, item.getId());
+        log.info("UPDATED_ITEM by userId: {}, role: {} (itemId: {})", ownerId, userRole, item.getId());
     }
 
     @Override
     public void delete(String itemId, UUID ownerId, String userRole) {
         updateStatus(itemId, Status.DELETED, ownerId, userRole);
-        log.info("DELETED_ITEM(SOFT) by userId: {} (itemId: {})", ownerId, itemId);
+        log.info("DELETED_ITEM(SOFT) by userId: {}, role: {} (itemId: {})", ownerId, userRole, itemId);
     }
 
     @Transactional
@@ -111,7 +111,7 @@ public class ItemService implements IService {
 
         repository.save(item);
 
-        log.info("DELETED_IMAGE by userId: {} (itemId: {}) - index: {}", ownerId, itemId, index);
+        log.info("DELETED_IMAGE by userId: {}, role: {} (itemId: {}) - index: {}", ownerId, userRole, itemId, index);
     }
 
     @Override
@@ -127,7 +127,7 @@ public class ItemService implements IService {
         item.addImageUrl(imageUrl);
         repository.save(item);
 
-        log.info("ADDED_IMAGE by userId: {} (itemId: {})", ownerId, itemId);
+        log.info("ADDED_IMAGE by userId: {}, role: {} (itemId: {})", ownerId, userRole, itemId);
         return imageUrl;
     }
 
