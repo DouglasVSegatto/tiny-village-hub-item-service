@@ -28,26 +28,22 @@ public class ItemController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ResponseDto> getItem(@PathVariable String id) {
-        ResponseDto item = itemService.findById(id);
-        return ResponseEntity.ok(item);
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(
             @PathVariable String id,
             @Valid @RequestBody RequestDto request,
-            @RequestHeader("X-User-Id") UUID userId) {
-        itemService.update(id, request, userId);
+            @RequestHeader("X-User-Id") UUID userId,
+            @RequestHeader("X-User-Role") String userRole) {
+        itemService.update(id, request, userId, userRole);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @PathVariable String id,
-            @RequestHeader("X-User-Id") UUID userId) {
-        itemService.delete(id, userId);
+            @RequestHeader("X-User-Id") UUID userId,
+            @RequestHeader("X-User-Role") String userRole){
+        itemService.delete(id, userId, userRole);
         return ResponseEntity.noContent().build();
     }
 
@@ -55,9 +51,16 @@ public class ItemController {
     public ResponseEntity<Void> updateStatus(
             @PathVariable String id,
             @RequestParam Status status,
-            @RequestHeader("X-User-Id") UUID userId) {
-        itemService.updateStatus(id, status, userId);
+            @RequestHeader("X-User-Id") UUID userId,
+            @RequestHeader("X-User-Role") String userRole){
+        itemService.updateStatus(id, status, userId, userRole);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseDto> getItem(@PathVariable String id) {
+        ResponseDto item = itemService.findById(id);
+        return ResponseEntity.ok(item);
     }
 
     @GetMapping
@@ -67,7 +70,8 @@ public class ItemController {
     }
 
     @GetMapping("/my-items")
-    public ResponseEntity<List<ResponseDto>> getMyItems(@RequestHeader("X-User-Id") UUID userId) {
+    public ResponseEntity<List<ResponseDto>> getMyItems(
+            @RequestHeader("X-User-Id") UUID userId) {
         List<ResponseDto> items = itemService.findByOwnerId(userId);
         return ResponseEntity.ok(items);
     }

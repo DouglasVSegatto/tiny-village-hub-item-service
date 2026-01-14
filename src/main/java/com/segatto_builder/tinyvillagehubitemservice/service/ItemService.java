@@ -25,8 +25,8 @@ public class ItemService implements IService {
     private final IStorageService storageService;
 
     @Override
-    public void updateStatus(String itemId, Status newStatus, UUID ownerId) {
-        Item item = findByIdAndValidateOwnership(itemId, ownerId);
+    public void updateStatus(String itemId, Status newStatus, UUID ownerId, String userRole) {
+        Item item = findByIdAndValidateOwnership(itemId, ownerId, userRole);
         Status oldStatus = item.getStatus();
 
         validateStatusTransition(oldStatus, newStatus);
@@ -50,16 +50,16 @@ public class ItemService implements IService {
 
 
     @Override
-    public void update(String itemId, RequestDto dto, UUID ownerId) {
-        Item item = findByIdAndValidateOwnership(itemId, ownerId);
+    public void update(String itemId, RequestDto dto, UUID ownerId, String userRole) {
+        Item item = findByIdAndValidateOwnership(itemId, ownerId, userRole);
         mapper.updateEntityFromDto(dto, item);
         repository.save(item);
         log.info("UPDATED_ITEM by userId: {} (itemId: {})", ownerId, item.getId());
     }
 
     @Override
-    public void delete(String itemId, UUID ownerId) {
-        updateStatus(itemId, Status.DELETED, ownerId);
+    public void delete(String itemId, UUID ownerId, String userRole) {
+        updateStatus(itemId, Status.DELETED, ownerId, userRole);
         log.info("DELETED_ITEM(SOFT) by userId: {} (itemId: {})", ownerId, itemId);
     }
 
@@ -102,8 +102,8 @@ public class ItemService implements IService {
     }
 
     @Override
-    public void deleteImage(String itemId, int index, UUID ownerId) {
-        Item item = findByIdAndValidateOwnership(itemId, ownerId);
+    public void deleteImage(String itemId, int index, UUID ownerId, String userRole) {
+        Item item = findByIdAndValidateOwnership(itemId, ownerId, userRole);
 
         String urlToDelete = item.removeImageUrl(index); // Throws exception if invalid index
 
@@ -115,8 +115,8 @@ public class ItemService implements IService {
     }
 
     @Override
-    public String addImage(String itemId, MultipartFile file, UUID ownerId) {
-        Item item = findByIdAndValidateOwnership(itemId, ownerId);
+    public String addImage(String itemId, MultipartFile file, UUID ownerId, String userRole) {
+        Item item = findByIdAndValidateOwnership(itemId, ownerId, userRole);
 
         if (item.getImageUrls().size() >= 5) {
             throw new IllegalStateException("Maximum 5 images allowed");
@@ -155,9 +155,16 @@ public class ItemService implements IService {
         return repository.findByStatusAndOwnerCountryIgnoreCase(Status.ACTIVE, country);
     }
 
-    private Item findByIdAndValidateOwnership(String id, UUID ownerId) {
-        return repository.findByIdAndOwnerId(id, ownerId)
-                .orElseThrow(() -> new SecurityException("Item not found or user not authorized"));
+    private Item findByIdAndValidateOwnership(String id, UUID ownerId, String userRole) {
+        Item item = repository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Item not found"));
+
+        // Only owner or ADMIN can update
+        if (!item.getOwnerId().equals(ownerId) && !"ADMIN".equals(userRole)) {
+            throw new SecurityException("You don't have permission to update this item");
+        }
+
+        return item;
     }
 
     private void validateStatusTransition(Status from, Status to) {

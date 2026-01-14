@@ -10,13 +10,13 @@ import java.util.UUID;
 
 public interface IService {
 
-    void updateStatus(String id, Status newStatus, UUID ownerId);
-
     void create(RequestDto dto, UUID ownerId);
 
-    void update(String id, RequestDto dto, UUID ownerId);
+    void update(String id, RequestDto dto, UUID ownerId, String userRole);
 
-    void delete(String id, UUID ownerId);
+    void delete(String id, UUID ownerId, String userRole);
+
+    void updateStatus(String id, Status newStatus, UUID ownerId, String userRole);
 
     ResponseDto findById(String itemId);
 
@@ -31,9 +31,9 @@ public interface IService {
     List<ResponseDto> listByCountry(String country);
 
     // Images
-    String addImage(String itemId, MultipartFile file, UUID ownerId);
+    String addImage(String itemId, MultipartFile file, UUID ownerId, String userRole);
 
-    void deleteImage(String itemId, int index, UUID ownerId);
+    void deleteImage(String itemId, int index, UUID ownerId, String userRole);
 
     List<String> getImages(String itemId);
 }
