@@ -1,4 +1,4 @@
-name: Items Service Deployment
+name: Item Service Deployment
 
 on:
   push:
@@ -7,14 +7,12 @@ on:
 
 jobs:
   deploy:
-    runs-on: item-service-runner
-    steps:
-      - name: 1. Checkout Items Service Code
-        uses: actions/checkout@v4
-        with:
-          path: .
+    runs-on: item-service
 
-      - name: 2. Deploy Service via Dockge/Compose
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build & deploy item service
         run: |
-          cd /opt/stacks/web-project
-          docker compose up -d --build --no-deps items-service
+          cd /home/popcornpalace/deployment/stacks/web-project
+          docker compose up -d --build --no-deps item-service
