@@ -42,7 +42,7 @@ public class ItemController {
     public ResponseEntity<Void> delete(
             @PathVariable String id,
             @RequestHeader("X-User-Id") UUID userId,
-            @RequestHeader("X-User-Role") String userRole){
+            @RequestHeader("X-User-Role") String userRole) {
         itemService.delete(id, userId, userRole);
         return ResponseEntity.noContent().build();
     }
@@ -52,7 +52,7 @@ public class ItemController {
             @PathVariable String id,
             @RequestParam Status status,
             @RequestHeader("X-User-Id") UUID userId,
-            @RequestHeader("X-User-Role") String userRole){
+            @RequestHeader("X-User-Role") String userRole) {
         itemService.updateStatus(id, status, userId, userRole);
         return ResponseEntity.ok().build();
     }

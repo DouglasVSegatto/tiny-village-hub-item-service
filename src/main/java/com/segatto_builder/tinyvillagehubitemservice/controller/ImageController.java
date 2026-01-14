@@ -22,7 +22,7 @@ public class ImageController {
             @RequestParam("file") MultipartFile file,
             @RequestHeader("X-User-Id") UUID userId,
             @RequestHeader("X-User-Role") String userRole) {
-        String imageUrl = itemService.addImage(itemId, file, userId,userRole);
+        String imageUrl = itemService.addImage(itemId, file, userId, userRole);
         return ResponseEntity.ok(imageUrl);
     }
 
@@ -32,7 +32,7 @@ public class ImageController {
             @PathVariable int index,
             @RequestHeader("X-User-Id") UUID userId,
             @RequestHeader("X-User-Role") String userRole) {
-        itemService.deleteImage(itemId, index, userId,userRole);
+        itemService.deleteImage(itemId, index, userId, userRole);
         return ResponseEntity.noContent().build();
     }
 

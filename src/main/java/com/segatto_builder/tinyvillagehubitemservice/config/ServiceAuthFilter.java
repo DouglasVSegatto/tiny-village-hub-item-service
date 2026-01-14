@@ -5,7 +5,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -23,12 +22,12 @@ public class ServiceAuthFilter extends OncePerRequestFilter {
 
         String serviceKey = request.getHeader("X-Service-Key");
 
-        if (serviceKey == null || !serviceKey.equals(key)){
+        if (serviceKey == null || !serviceKey.equals(key)) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
             response.setContentType("application/json");
             response.getWriter().write("{\"error\": \"Invalid secret key\"}");
             return;
         }
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
 }
