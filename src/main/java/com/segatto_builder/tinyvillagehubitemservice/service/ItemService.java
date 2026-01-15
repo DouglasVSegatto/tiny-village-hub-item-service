@@ -72,6 +72,12 @@ public class ItemService implements IService {
     }
 
     @Override
+    public List<ResponseDto> getActiveItems() {
+        List<Item> items = repository.findByStatus(Status.ACTIVE);
+        return mapper.toResponseList(items);
+    }
+
+    @Override
     public List<ResponseDto> findByOwnerId(UUID ownerId) {
         List<Item> items = repository.findByOwnerIdAndStatusNot(ownerId, Status.DELETED);
         return mapper.toResponseList(items);

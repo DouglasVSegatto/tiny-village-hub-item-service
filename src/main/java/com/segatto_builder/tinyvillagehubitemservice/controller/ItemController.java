@@ -65,8 +65,8 @@ public class ItemController {
 
     @GetMapping
     public ResponseEntity<List<ResponseDto>> getActiveItems() {
-        // TODO: Implement proper active items list
-        return ResponseEntity.ok(List.of());
+        List<ResponseDto> items = itemService.getActiveItems();
+        return ResponseEntity.ok(items);
     }
 
     @GetMapping("/my-items")

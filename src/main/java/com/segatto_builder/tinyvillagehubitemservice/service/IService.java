@@ -20,6 +20,8 @@ public interface IService {
 
     ResponseDto findById(String itemId);
 
+    List<ResponseDto> getActiveItems();
+
     List<ResponseDto> findByOwnerId(UUID ownerId);
 
     List<ResponseDto> listByCity(String city);
