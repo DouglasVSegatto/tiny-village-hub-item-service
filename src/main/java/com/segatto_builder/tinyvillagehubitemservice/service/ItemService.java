@@ -52,7 +52,11 @@ public class ItemService implements IService {
     @Override
     public void update(String itemId, RequestDto dto, UUID ownerId, String userRole) {
         Item item = findByIdAndValidateOwnership(itemId, ownerId, userRole);
-        mapper.updateEntityFromDto(dto, item);
+        item.setName(dto.getName());
+        item.setDescription(dto.getDescription());
+        item.setType(dto.getType());
+        item.setAvailabilityType(dto.getAvailabilityType());
+        item.setCondition(dto.getCondition());
         repository.save(item);
         log.info("UPDATED_ITEM by userId: {}, role: {} (itemId: {})", ownerId, userRole, item.getId());
     }

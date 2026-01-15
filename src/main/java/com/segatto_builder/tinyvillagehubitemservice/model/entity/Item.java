@@ -1,6 +1,7 @@
 package com.segatto_builder.tinyvillagehubitemservice.model.entity;
 
 import com.segatto_builder.tinyvillagehubitemservice.model.enums.AvailabilityType;
+import com.segatto_builder.tinyvillagehubitemservice.model.enums.Condition;
 import com.segatto_builder.tinyvillagehubitemservice.model.enums.Status;
 import com.segatto_builder.tinyvillagehubitemservice.model.enums.Type;
 import jakarta.validation.constraints.NotBlank;
@@ -40,6 +41,9 @@ public class Item {
 
     @NotNull(message = "Availability type is required")
     private AvailabilityType availabilityType;
+
+    @NotNull(message = "Condition type is required")
+    private Condition condition;
 
     @NotNull(message = "Owner ID is required")
     @Field("owner_id")

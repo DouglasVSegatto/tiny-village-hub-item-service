@@ -21,11 +21,4 @@ public interface Mapper {
 
     List<ResponseDto> toResponseList(List<Item> items);
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "ownerId", ignore = true)
-    @Mapping(target = "status", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "imageUrls", ignore = true)
-    void updateEntityFromDto(RequestDto dto, @MappingTarget Item item);
 }
