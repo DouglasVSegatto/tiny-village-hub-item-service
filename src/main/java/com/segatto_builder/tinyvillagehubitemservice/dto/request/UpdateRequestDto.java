@@ -11,6 +11,20 @@ import lombok.Data;
 @Data
 @Builder
 public class UpdateRequestDto {
+    /**
+     * Request DTO for updating an existing item
+     * Only editable fields are included
+     *
+     * Example JSON:
+     {
+     "name": "Harry Potter Book 1 - Updated",
+     "description": "Gently used hardcover book",
+     "type": "BOOK",
+     "availabilityType": "TRADE",
+     "condition": "USED"
+     }
+     */
+
     @NotBlank
     private String name;
 

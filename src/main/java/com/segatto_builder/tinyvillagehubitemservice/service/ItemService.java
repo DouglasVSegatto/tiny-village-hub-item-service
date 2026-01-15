@@ -1,6 +1,7 @@
 package com.segatto_builder.tinyvillagehubitemservice.service;
 
-import com.segatto_builder.tinyvillagehubitemservice.dto.request.RequestDto;
+import com.segatto_builder.tinyvillagehubitemservice.dto.request.CreateRequestDto;
+import com.segatto_builder.tinyvillagehubitemservice.dto.request.UpdateRequestDto;
 import com.segatto_builder.tinyvillagehubitemservice.dto.response.ResponseDto;
 import com.segatto_builder.tinyvillagehubitemservice.mapper.Mapper;
 import com.segatto_builder.tinyvillagehubitemservice.model.entity.Item;
@@ -41,7 +42,7 @@ public class ItemService implements IService {
     }
 
     @Override
-    public void create(RequestDto dto, UUID ownerId) {
+    public void create(CreateRequestDto dto, UUID ownerId) {
         Item item = mapper.toEntity(dto);
         item.setOwnerId(ownerId);
         repository.save(item);
@@ -50,7 +51,7 @@ public class ItemService implements IService {
 
 
     @Override
-    public void update(String itemId, RequestDto dto, UUID ownerId, String userRole) {
+    public void update(String itemId, UpdateRequestDto dto, UUID ownerId, String userRole) {
         Item item = findByIdAndValidateOwnership(itemId, ownerId, userRole);
         item.setName(dto.getName());
         item.setDescription(dto.getDescription());

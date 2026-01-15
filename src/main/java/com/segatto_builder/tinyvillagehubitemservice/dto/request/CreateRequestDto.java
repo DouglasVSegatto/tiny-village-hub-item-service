@@ -10,20 +10,21 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class RequestDto {
+public class CreateRequestDto {
 
     /* Json Example
     {
-      "name": "Harry Potter Book 1",
-      "description": "Brand new Book",
-      "type": "BOOK",
-      "availabilityType": "TRADE",
-      "condition": "NEW",
-      "status": "ACTIVE",
-      "ownerNeighbourhood": "Downtown",
-      "ownerCity": "Seattle",
-      "ownerState": "Washington",
-      "ownerCountry": "USA"
+        "name": "Harry Potter Book 1",
+        "description": "Brand new hardcover book in perfect condition",
+        "type": "BOOK",
+        "availabilityType": "TRADE",
+        "condition": "NEW",
+        "status": "ACTIVE",
+        "ownerUsername": "john_doe",
+        "ownerNeighbourhood": "Downtown",
+        "ownerCity": "Seattle",
+        "ownerState": "Washington",
+        "ownerCountry": "USA"
     }
     * */
     @NotBlank(message = "Name is required")
@@ -44,6 +45,9 @@ public class RequestDto {
 
     @NotNull(message = "Status is required")
     private Status status;
+
+    @NotBlank(message = "ownerUsername is required")
+    private String ownerUsername;
 
     @NotBlank(message = "Owner city is required")
     private String ownerCity;

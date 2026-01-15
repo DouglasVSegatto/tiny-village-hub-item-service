@@ -49,6 +49,10 @@ public class Item {
     @Field("owner_id")
     private UUID ownerId;
 
+    @NotNull(message = "Owner ID is required")
+    @Field("owner_username")
+    private String ownerUsername;
+
     @Field("owner_neighbourhood")
     private String ownerNeighbourhood;
 

@@ -1,6 +1,7 @@
 package com.segatto_builder.tinyvillagehubitemservice.controller;
 
-import com.segatto_builder.tinyvillagehubitemservice.dto.request.RequestDto;
+import com.segatto_builder.tinyvillagehubitemservice.dto.request.CreateRequestDto;
+import com.segatto_builder.tinyvillagehubitemservice.dto.request.UpdateRequestDto;
 import com.segatto_builder.tinyvillagehubitemservice.dto.response.ResponseDto;
 import com.segatto_builder.tinyvillagehubitemservice.model.enums.Status;
 import com.segatto_builder.tinyvillagehubitemservice.service.IService;
@@ -22,7 +23,7 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<Void> create(
-            @Valid @RequestBody RequestDto request,
+            @Valid @RequestBody CreateRequestDto request,
             @RequestHeader("X-User-Id") UUID userId) {
         itemService.create(request, userId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -31,7 +32,7 @@ public class ItemController {
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(
             @PathVariable String id,
-            @Valid @RequestBody RequestDto request,
+            @Valid @RequestBody UpdateRequestDto request,
             @RequestHeader("X-User-Id") UUID userId,
             @RequestHeader("X-User-Role") String userRole) {
         itemService.update(id, request, userId, userRole);

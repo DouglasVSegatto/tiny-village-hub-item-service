@@ -1,6 +1,7 @@
 package com.segatto_builder.tinyvillagehubitemservice.service;
 
-import com.segatto_builder.tinyvillagehubitemservice.dto.request.RequestDto;
+import com.segatto_builder.tinyvillagehubitemservice.dto.request.CreateRequestDto;
+import com.segatto_builder.tinyvillagehubitemservice.dto.request.UpdateRequestDto;
 import com.segatto_builder.tinyvillagehubitemservice.dto.response.ResponseDto;
 import com.segatto_builder.tinyvillagehubitemservice.model.enums.Status;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,9 +11,9 @@ import java.util.UUID;
 
 public interface IService {
 
-    void create(RequestDto dto, UUID ownerId);
+    void create(CreateRequestDto dto, UUID ownerId);
 
-    void update(String id, RequestDto dto, UUID ownerId, String userRole);
+    void update(String id, UpdateRequestDto dto, UUID ownerId, String userRole);
 
     void delete(String id, UUID ownerId, String userRole);
 
