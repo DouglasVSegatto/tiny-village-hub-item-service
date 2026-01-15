@@ -5,11 +5,15 @@ import com.segatto_builder.tinyvillagehubitemservice.model.enums.Condition;
 import com.segatto_builder.tinyvillagehubitemservice.model.enums.Type;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UpdateRequestDto {
     /**
      * Request DTO for updating an existing item

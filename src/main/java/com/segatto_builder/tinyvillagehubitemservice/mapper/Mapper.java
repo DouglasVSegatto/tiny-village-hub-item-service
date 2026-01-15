@@ -16,7 +16,7 @@ public interface Mapper {
     @Mapping(target = "properties", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    Item toEntity(CreateRequestDto request);  // ← Change RequestDto to CreateRequestDto
+    Item toEntity(CreateRequestDto request);
 
     ResponseDto toResponse(Item item);
 

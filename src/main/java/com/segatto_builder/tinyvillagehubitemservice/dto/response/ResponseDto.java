@@ -4,7 +4,9 @@ import com.segatto_builder.tinyvillagehubitemservice.model.enums.AvailabilityTyp
 import com.segatto_builder.tinyvillagehubitemservice.model.enums.Condition;
 import com.segatto_builder.tinyvillagehubitemservice.model.enums.Status;
 import com.segatto_builder.tinyvillagehubitemservice.model.enums.Type;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.Map;
 import java.util.UUID;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ResponseDto {
 
     /**
