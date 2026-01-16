@@ -25,17 +25,12 @@ public class R2StorageService implements IStorageService {
     @Override
     public String uploadFile(MultipartFile file, String itemId) {
         try {
-            // Get current year
+
             String year = String.valueOf(java.time.Year.now().getValue());
-
-            // Get current image count for this item
             int imageIndex = getCurrentImageCount(itemId, year) + 1;
-
-            // Get file extension
             String extension = getFileExtension(file.getOriginalFilename());
 
-            // Standard path: items/{year}/{itemId}/gallery_{index}.{ext}
-            String fileName = "gallery_" + imageIndex + extension;
+            String fileName = "gallery_" + System.currentTimeMillis() + extension;
             String key = "items/" + year + "/" + itemId + "/" + fileName;
 
             PutObjectRequest request = PutObjectRequest.builder()
@@ -68,7 +63,6 @@ public class R2StorageService implements IStorageService {
     @Override
     public void deleteFile(String url) {
         try {
-            // URL format: https://your-bucket.r2.dev/items/2024/itemId/gallery_1.jpg
             String key = getKeyFromUrl(url);
 
             DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
