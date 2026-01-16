@@ -22,25 +22,25 @@ public class ItemResponseDto {
      * Response DTO for item data
      * Example JSON:
      {
-         "id": "696881437e0814e3181e6aa1",
-         "name": "Harry Potter Book 1",
-         "description": "Brand new hardcover book in perfect condition",
-         "type": "BOOK",
-         "availabilityType": "TRADE",
-         "condition": "NEW",
-         "status": "ACTIVE",
-         "ownerId": "550e8400-e29b-41d4-a716-446655440000",
-         "ownerUsername": "john_doe",
-         "ownerNeighbourhood": "Downtown",
-         "ownerCity": "Seattle",
-         "ownerState": "Washington",
-         "ownerCountry": "USA",
-         "imageUrls": [
-            "https://pub-xxx.r2.dev/items/2026/696881437e0814e3181e6aa1/gallery_1.jpg"
-         ],
-         "properties": {},
-         "createdAt": "2026-01-15T20:30:00",
-         "updatedAt": "2026-01-15T20:45:00"
+     "id": "696881437e0814e3181e6aa1",
+     "name": "Harry Potter Book 1",
+     "description": "Brand new hardcover book in perfect condition",
+     "type": "BOOK",
+     "availabilityType": "TRADE",
+     "condition": "NEW",
+     "status": "ACTIVE",
+     "ownerId": "550e8400-e29b-41d4-a716-446655440000",
+     "ownerUsername": "john_doe",
+     "ownerNeighbourhood": "Downtown",
+     "ownerCity": "Seattle",
+     "ownerState": "Washington",
+     "ownerCountry": "USA",
+     "imageUrls": [
+     "https://pub-xxx.r2.dev/items/2026/696881437e0814e3181e6aa1/gallery_1.jpg"
+     ],
+     "properties": {},
+     "createdAt": "2026-01-15T20:30:00",
+     "updatedAt": "2026-01-15T20:45:00"
      }
      */
 

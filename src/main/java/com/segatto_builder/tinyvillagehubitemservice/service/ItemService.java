@@ -126,7 +126,7 @@ public class ItemService implements IService {
     public void removeImage(String itemId, int index, UUID ownerId, String userRole) {
         Item item = findByIdAndValidateOwnership(itemId, ownerId, userRole);
 
-        String urlToDelete = item.removeImageUrl(index); // Throws exception if invalid index
+        String urlToDelete = item.removeImageUrl(index);
 
         storageService.deleteFile(urlToDelete);
 
@@ -139,12 +139,13 @@ public class ItemService implements IService {
     public String addImage(String itemId, MultipartFile file, UUID ownerId, String userRole) {
 
         // File is not empty check
-        if (file == null || file.isEmpty()){
+        if (file == null || file.isEmpty()) {
             throw new IllegalStateException("File can not be null or empty");
         }
 
         // File size check
-        if (file.getSize() > maxImageSizeMb) {
+        long maxSizeBytes = maxImageSizeMb * 1024L * 1024L;
+        if (file.getSize() > maxSizeBytes) {
             throw new IllegalArgumentException("File size must not exceed " + maxImageSizeMb);
         }
 
