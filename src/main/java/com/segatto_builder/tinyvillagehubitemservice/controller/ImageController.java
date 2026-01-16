@@ -32,7 +32,7 @@ public class ImageController {
             @PathVariable int index,
             @RequestHeader("X-User-Id") UUID userId,
             @RequestHeader("X-User-Role") String userRole) {
-        itemService.deleteImage(itemId, index, userId, userRole);
+        itemService.removeImage(itemId, index, userId, userRole);
         return ResponseEntity.noContent().build();
     }
 

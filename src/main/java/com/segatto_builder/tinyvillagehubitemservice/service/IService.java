@@ -2,7 +2,7 @@ package com.segatto_builder.tinyvillagehubitemservice.service;
 
 import com.segatto_builder.tinyvillagehubitemservice.dto.request.CreateRequestDto;
 import com.segatto_builder.tinyvillagehubitemservice.dto.request.UpdateRequestDto;
-import com.segatto_builder.tinyvillagehubitemservice.dto.response.ResponseDto;
+import com.segatto_builder.tinyvillagehubitemservice.dto.response.ItemResponseDto;
 import com.segatto_builder.tinyvillagehubitemservice.model.enums.Status;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,24 +19,24 @@ public interface IService {
 
     void updateStatus(String id, Status newStatus, UUID ownerId, String userRole);
 
-    ResponseDto findById(String itemId);
+    ItemResponseDto findById(String itemId);
 
-    List<ResponseDto> getActiveItems();
+    List<ItemResponseDto> getActiveItems();
 
-    List<ResponseDto> findByOwnerId(UUID ownerId);
+    List<ItemResponseDto> findByOwnerId(UUID ownerId);
 
-    List<ResponseDto> listByCity(String city);
+    List<ItemResponseDto> listByCity(String city);
 
-    List<ResponseDto> listByNeighborhood(String neighborhood);
+    List<ItemResponseDto> listByNeighborhood(String neighborhood);
 
-    List<ResponseDto> listByState(String state);
+    List<ItemResponseDto> listByState(String state);
 
-    List<ResponseDto> listByCountry(String country);
+    List<ItemResponseDto> listByCountry(String country);
 
     // Images
     String addImage(String itemId, MultipartFile file, UUID ownerId, String userRole);
 
-    void deleteImage(String itemId, int index, UUID ownerId, String userRole);
+    void removeImage(String itemId, int index, UUID ownerId, String userRole);
 
     List<String> getImages(String itemId);
 }

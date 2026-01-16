@@ -1,14 +1,14 @@
 package com.segatto_builder.tinyvillagehubitemservice.mapper;
 
 import com.segatto_builder.tinyvillagehubitemservice.dto.request.CreateRequestDto;
-import com.segatto_builder.tinyvillagehubitemservice.dto.response.ResponseDto;
+import com.segatto_builder.tinyvillagehubitemservice.dto.response.ItemResponseDto;
 import com.segatto_builder.tinyvillagehubitemservice.model.entity.Item;
 import org.mapstruct.Mapping;
 
 import java.util.List;
 
 @org.mapstruct.Mapper(componentModel = "spring")
-public interface Mapper {
+public interface ItemMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "ownerId", ignore = true)
@@ -18,7 +18,7 @@ public interface Mapper {
     @Mapping(target = "updatedAt", ignore = true)
     Item toEntity(CreateRequestDto request);
 
-    ResponseDto toResponse(Item item);
+    ItemResponseDto toResponse(Item item);
 
-    List<ResponseDto> toResponseList(List<Item> items);
+    List<ItemResponseDto> toResponseList(List<Item> items);
 }

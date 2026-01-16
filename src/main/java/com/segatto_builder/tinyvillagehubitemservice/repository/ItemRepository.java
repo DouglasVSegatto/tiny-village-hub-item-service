@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @org.springframework.stereotype.Repository
-public interface Repository extends MongoRepository<Item, String> {
+public interface ItemRepository extends MongoRepository<Item, String> {
 
     // Basic queries (same method names)
     Optional<Item> findByIdAndOwnerId(String id, UUID ownerId);

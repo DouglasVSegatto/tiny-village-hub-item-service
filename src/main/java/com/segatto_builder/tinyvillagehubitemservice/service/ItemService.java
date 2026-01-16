@@ -2,13 +2,14 @@ package com.segatto_builder.tinyvillagehubitemservice.service;
 
 import com.segatto_builder.tinyvillagehubitemservice.dto.request.CreateRequestDto;
 import com.segatto_builder.tinyvillagehubitemservice.dto.request.UpdateRequestDto;
-import com.segatto_builder.tinyvillagehubitemservice.dto.response.ResponseDto;
-import com.segatto_builder.tinyvillagehubitemservice.mapper.Mapper;
+import com.segatto_builder.tinyvillagehubitemservice.dto.response.ItemResponseDto;
+import com.segatto_builder.tinyvillagehubitemservice.mapper.ItemMapper;
 import com.segatto_builder.tinyvillagehubitemservice.model.entity.Item;
 import com.segatto_builder.tinyvillagehubitemservice.model.enums.Status;
-import com.segatto_builder.tinyvillagehubitemservice.repository.Repository;
+import com.segatto_builder.tinyvillagehubitemservice.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,9 +22,18 @@ import java.util.*;
 @Transactional
 public class ItemService implements IService {
 
-    private final Repository repository;
-    private final Mapper mapper;
+    private final ItemRepository itemRepository;
+    private final ItemMapper itemMapper;
     private final IStorageService storageService;
+
+    @Value("${image.upload.max-size-mb}")
+    private int maxImageSizeMb;
+
+    @Value("${image.upload.allowed-types}")
+    private List<String> allowedImageTypes;
+
+    @Value("${image.upload.max-images-per-item}")
+    private int maxImagesPerItem;
 
     @Override
     public void updateStatus(String itemId, Status newStatus, UUID ownerId, String userRole) {
@@ -33,7 +43,7 @@ public class ItemService implements IService {
         validateStatusTransition(oldStatus, newStatus);
 
         item.setStatus(newStatus);
-        repository.save(item);
+        itemRepository.save(item);
 
         log.info("UPDATED_STATUS from {} to {} by userId: {}, role: {} (itemId: {})",
                 oldStatus, newStatus, ownerId, userRole, item.getId());
@@ -43,9 +53,9 @@ public class ItemService implements IService {
 
     @Override
     public void create(CreateRequestDto dto, UUID ownerId) {
-        Item item = mapper.toEntity(dto);
+        Item item = itemMapper.toEntity(dto);
         item.setOwnerId(ownerId);
-        repository.save(item);
+        itemRepository.save(item);
         log.info("CREATED_ITEM by userId: {} (itemId: {})", ownerId, item.getId());
     }
 
@@ -58,7 +68,7 @@ public class ItemService implements IService {
         item.setType(dto.getType());
         item.setAvailabilityType(dto.getAvailabilityType());
         item.setCondition(dto.getCondition());
-        repository.save(item);
+        itemRepository.save(item);
         log.info("UPDATED_ITEM by userId: {}, role: {} (itemId: {})", ownerId, userRole, item.getId());
     }
 
@@ -70,73 +80,91 @@ public class ItemService implements IService {
 
     @Transactional
     @Override
-    public ResponseDto findById(String itemId) {
-        Item item = repository.findById(itemId)
+    public ItemResponseDto findById(String itemId) {
+        Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NoSuchElementException("Item not found with ID: " + itemId));
-        return mapper.toResponse(item);
+        return itemMapper.toResponse(item);
     }
 
     @Override
-    public List<ResponseDto> getActiveItems() {
-        List<Item> items = repository.findByStatus(Status.ACTIVE);
-        return mapper.toResponseList(items);
+    public List<ItemResponseDto> getActiveItems() {
+        List<Item> items = itemRepository.findByStatus(Status.ACTIVE);
+        return itemMapper.toResponseList(items);
     }
 
     @Override
-    public List<ResponseDto> findByOwnerId(UUID ownerId) {
-        List<Item> items = repository.findByOwnerIdAndStatusNot(ownerId, Status.DELETED);
-        return mapper.toResponseList(items);
+    public List<ItemResponseDto> findByOwnerId(UUID ownerId) {
+        List<Item> items = itemRepository.findByOwnerIdAndStatusNot(ownerId, Status.DELETED);
+        return itemMapper.toResponseList(items);
     }
 
     @Override
-    public List<ResponseDto> listByCity(String city) {
+    public List<ItemResponseDto> listByCity(String city) {
         List<Item> items = findByCity(city);
-        return mapper.toResponseList(items);
+        return itemMapper.toResponseList(items);
     }
 
     @Override
-    public List<ResponseDto> listByNeighborhood(String neighborhood) {
+    public List<ItemResponseDto> listByNeighborhood(String neighborhood) {
         List<Item> items = findByNeighborhood(neighborhood);
-        return mapper.toResponseList(items);
+        return itemMapper.toResponseList(items);
     }
 
     @Override
-    public List<ResponseDto> listByState(String state) {
+    public List<ItemResponseDto> listByState(String state) {
         List<Item> items = findByState(state);
-        return mapper.toResponseList(items);
+        return itemMapper.toResponseList(items);
     }
 
     @Override
-    public List<ResponseDto> listByCountry(String country) {
+    public List<ItemResponseDto> listByCountry(String country) {
         List<Item> items = findByCountry(country);
-        return mapper.toResponseList(items);
+        return itemMapper.toResponseList(items);
     }
 
     @Override
-    public void deleteImage(String itemId, int index, UUID ownerId, String userRole) {
+    public void removeImage(String itemId, int index, UUID ownerId, String userRole) {
         Item item = findByIdAndValidateOwnership(itemId, ownerId, userRole);
 
         String urlToDelete = item.removeImageUrl(index); // Throws exception if invalid index
 
         storageService.deleteFile(urlToDelete);
 
-        repository.save(item);
+        itemRepository.save(item);
 
         log.info("DELETED_IMAGE by userId: {}, role: {} (itemId: {}) - index: {}", ownerId, userRole, itemId, index);
     }
 
     @Override
     public String addImage(String itemId, MultipartFile file, UUID ownerId, String userRole) {
+
+        // File is not empty check
+        if (file == null || file.isEmpty()){
+            throw new IllegalStateException("File can not be null or empty");
+        }
+
+        // File size check
+        if (file.getSize() > maxImageSizeMb) {
+            throw new IllegalArgumentException("File size must not exceed " + maxImageSizeMb);
+        }
+
+        //File extension check
+        String contentType = file.getContentType();
+        if (contentType == null || !allowedImageTypes.contains(contentType)) {
+            throw new IllegalArgumentException("Only " + String.join(", ", allowedImageTypes) + " are allowed");
+        }
+
         Item item = findByIdAndValidateOwnership(itemId, ownerId, userRole);
 
-        if (item.getImageUrls().size() >= 5) {
-            throw new IllegalStateException("Maximum 5 images allowed");
+        // Images per item check
+        if (item.getImageUrls().size() >= maxImagesPerItem) {
+            throw new IllegalStateException("Maximum " + maxImagesPerItem + " images allowed");
         }
 
         String imageUrl = storageService.uploadFile(file, item.getId());
 
         item.addImageUrl(imageUrl);
-        repository.save(item);
+        itemRepository.save(item);
 
         log.info("ADDED_IMAGE by userId: {}, role: {} (itemId: {})", ownerId, userRole, itemId);
         return imageUrl;
@@ -144,30 +172,30 @@ public class ItemService implements IService {
 
     @Override
     public List<String> getImages(String itemId) {
-        Item item = repository.findById(itemId)
+        Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NoSuchElementException("Item not found"));
         return new ArrayList<>(item.getImageUrls());
     }
 
     // Private helper methods
     private List<Item> findByNeighborhood(String neighborhood) {
-        return repository.findByStatusAndOwnerNeighbourhoodIgnoreCase(Status.ACTIVE, neighborhood);
+        return itemRepository.findByStatusAndOwnerNeighbourhoodIgnoreCase(Status.ACTIVE, neighborhood);
     }
 
     private List<Item> findByCity(String city) {
-        return repository.findByStatusAndOwnerCityIgnoreCase(Status.ACTIVE, city);
+        return itemRepository.findByStatusAndOwnerCityIgnoreCase(Status.ACTIVE, city);
     }
 
     private List<Item> findByState(String state) {
-        return repository.findByStatusAndOwnerStateIgnoreCase(Status.ACTIVE, state);
+        return itemRepository.findByStatusAndOwnerStateIgnoreCase(Status.ACTIVE, state);
     }
 
     private List<Item> findByCountry(String country) {
-        return repository.findByStatusAndOwnerCountryIgnoreCase(Status.ACTIVE, country);
+        return itemRepository.findByStatusAndOwnerCountryIgnoreCase(Status.ACTIVE, country);
     }
 
     private Item findByIdAndValidateOwnership(String id, UUID ownerId, String userRole) {
-        Item item = repository.findById(id)
+        Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Item not found"));
 
         // Only owner or ADMIN can update

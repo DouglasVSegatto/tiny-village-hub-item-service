@@ -2,7 +2,7 @@ package com.segatto_builder.tinyvillagehubitemservice.controller;
 
 import com.segatto_builder.tinyvillagehubitemservice.dto.request.CreateRequestDto;
 import com.segatto_builder.tinyvillagehubitemservice.dto.request.UpdateRequestDto;
-import com.segatto_builder.tinyvillagehubitemservice.dto.response.ResponseDto;
+import com.segatto_builder.tinyvillagehubitemservice.dto.response.ItemResponseDto;
 import com.segatto_builder.tinyvillagehubitemservice.model.enums.Status;
 import com.segatto_builder.tinyvillagehubitemservice.service.IService;
 import jakarta.validation.Valid;
@@ -59,45 +59,45 @@ public class ItemController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseDto> getItem(@PathVariable String id) {
-        ResponseDto item = itemService.findById(id);
+    public ResponseEntity<ItemResponseDto> getItem(@PathVariable String id) {
+        ItemResponseDto item = itemService.findById(id);
         return ResponseEntity.ok(item);
     }
 
     @GetMapping
-    public ResponseEntity<List<ResponseDto>> getActiveItems() {
-        List<ResponseDto> items = itemService.getActiveItems();
+    public ResponseEntity<List<ItemResponseDto>> getActiveItems() {
+        List<ItemResponseDto> items = itemService.getActiveItems();
         return ResponseEntity.ok(items);
     }
 
     @GetMapping("/my-items")
-    public ResponseEntity<List<ResponseDto>> getMyItems(
+    public ResponseEntity<List<ItemResponseDto>> getMyItems(
             @RequestHeader("X-User-Id") UUID userId) {
-        List<ResponseDto> items = itemService.findByOwnerId(userId);
+        List<ItemResponseDto> items = itemService.findByOwnerId(userId);
         return ResponseEntity.ok(items);
     }
 
     @GetMapping("/search/neighbourhood/{neighbourhood}")
-    public ResponseEntity<List<ResponseDto>> getItemsByNeighbourhood(@PathVariable String neighbourhood) {
-        List<ResponseDto> items = itemService.listByNeighborhood(neighbourhood);
+    public ResponseEntity<List<ItemResponseDto>> getItemsByNeighbourhood(@PathVariable String neighbourhood) {
+        List<ItemResponseDto> items = itemService.listByNeighborhood(neighbourhood);
         return ResponseEntity.ok(items);
     }
 
     @GetMapping("/search/city/{city}")
-    public ResponseEntity<List<ResponseDto>> getItemsByCity(@PathVariable String city) {
-        List<ResponseDto> items = itemService.listByCity(city);
+    public ResponseEntity<List<ItemResponseDto>> getItemsByCity(@PathVariable String city) {
+        List<ItemResponseDto> items = itemService.listByCity(city);
         return ResponseEntity.ok(items);
     }
 
     @GetMapping("/search/state/{state}")
-    public ResponseEntity<List<ResponseDto>> getItemsByState(@PathVariable String state) {
-        List<ResponseDto> items = itemService.listByState(state);
+    public ResponseEntity<List<ItemResponseDto>> getItemsByState(@PathVariable String state) {
+        List<ItemResponseDto> items = itemService.listByState(state);
         return ResponseEntity.ok(items);
     }
 
     @GetMapping("/search/country/{country}")
-    public ResponseEntity<List<ResponseDto>> getItemsByCountry(@PathVariable String country) {
-        List<ResponseDto> items = itemService.listByCountry(country);
+    public ResponseEntity<List<ItemResponseDto>> getItemsByCountry(@PathVariable String country) {
+        List<ItemResponseDto> items = itemService.listByCountry(country);
         return ResponseEntity.ok(items);
     }
 }
