@@ -3,6 +3,7 @@ package com.segatto_builder.tinyvillagehubitemservice.service;
 import com.segatto_builder.tinyvillagehubitemservice.dto.request.CreateRequestDto;
 import com.segatto_builder.tinyvillagehubitemservice.dto.request.UpdateRequestDto;
 import com.segatto_builder.tinyvillagehubitemservice.dto.response.ItemResponseDto;
+import com.segatto_builder.tinyvillagehubitemservice.dto.response.PaginationResponseDto;
 import com.segatto_builder.tinyvillagehubitemservice.mapper.ItemMapper;
 import com.segatto_builder.tinyvillagehubitemservice.model.entity.Item;
 import com.segatto_builder.tinyvillagehubitemservice.model.enums.Status;
@@ -10,6 +11,10 @@ import com.segatto_builder.tinyvillagehubitemservice.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -123,6 +128,36 @@ public class ItemService implements IService {
     }
 
     @Override
+    public PaginationResponseDto<ItemResponseDto> getActiveItemsPaginated(int page, int size) {
+        Page<Item> itemPage = findActiveItemsPaginated(page, size);
+        return buildPaginationResponse(itemPage);
+    }
+
+    @Override
+    public PaginationResponseDto<ItemResponseDto> listByCityPaginated(String city, int page, int size) {
+        Page<Item> itemPage = findByCityPaginated(city, page, size);
+        return buildPaginationResponse(itemPage);
+    }
+
+    @Override
+    public PaginationResponseDto<ItemResponseDto> listByNeighborhoodPaginated(String neighborhood, int page, int size) {
+        Page<Item> itemPage = findByNeighborhoodPaginated(neighborhood, page, size);
+        return buildPaginationResponse(itemPage);
+    }
+
+    @Override
+    public PaginationResponseDto<ItemResponseDto> listByStatePaginated(String state, int page, int size) {
+        Page<Item> itemPage = findByStatePaginated(state, page, size);
+        return buildPaginationResponse(itemPage);
+    }
+
+    @Override
+    public PaginationResponseDto<ItemResponseDto> listByCountryPaginated(String country, int page, int size) {
+        Page<Item> itemPage = findByCountryPaginated(country, page, size);
+        return buildPaginationResponse(itemPage);
+    }
+
+    @Override
     public void removeImage(String itemId, int index, UUID ownerId, String userRole) {
         Item item = findByIdAndValidateOwnership(itemId, ownerId, userRole);
 
@@ -194,6 +229,44 @@ public class ItemService implements IService {
     private List<Item> findByCountry(String country) {
         return itemRepository.findByStatusAndOwnerCountryIgnoreCase(Status.ACTIVE, country);
     }
+
+    //Private Helper methods - Pagination
+    private Pageable createPageable(int page, int size) {
+        return PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+    }
+
+    private PaginationResponseDto<ItemResponseDto> buildPaginationResponse(Page<Item> itemPage) {
+        List<ItemResponseDto> items = itemMapper.toResponseList(itemPage.getContent());
+        return new PaginationResponseDto<>(
+                items,
+                itemPage.getNumber(),
+                itemPage.getSize(),
+                itemPage.getTotalElements(),
+                itemPage.getTotalPages(),
+                itemPage.hasNext()
+        );
+    }
+
+    private Page<Item> findActiveItemsPaginated(int page, int size) {
+        return itemRepository.findPageByStatus(Status.ACTIVE, createPageable(page, size));
+    }
+
+    private Page<Item> findByCityPaginated(String city, int page, int size) {
+        return itemRepository.findPageByStatusAndOwnerCityIgnoreCase(Status.ACTIVE, city, createPageable(page, size));
+    }
+
+    private Page<Item> findByNeighborhoodPaginated(String neighborhood, int page, int size) {
+        return itemRepository.findPageByStatusAndOwnerNeighbourhoodIgnoreCase(Status.ACTIVE, neighborhood, createPageable(page, size));
+    }
+
+    private Page<Item> findByStatePaginated(String state, int page, int size) {
+        return itemRepository.findPageByStatusAndOwnerStateIgnoreCase(Status.ACTIVE, state, createPageable(page, size));
+    }
+
+    private Page<Item> findByCountryPaginated(String country, int page, int size) {
+        return itemRepository.findPageByStatusAndOwnerCountryIgnoreCase(Status.ACTIVE, country, createPageable(page, size));
+    }
+
 
     private Item findByIdAndValidateOwnership(String id, UUID ownerId, String userRole) {
         Item item = itemRepository.findById(id)

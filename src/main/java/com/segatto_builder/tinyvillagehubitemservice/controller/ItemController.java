@@ -3,6 +3,7 @@ package com.segatto_builder.tinyvillagehubitemservice.controller;
 import com.segatto_builder.tinyvillagehubitemservice.dto.request.CreateRequestDto;
 import com.segatto_builder.tinyvillagehubitemservice.dto.request.UpdateRequestDto;
 import com.segatto_builder.tinyvillagehubitemservice.dto.response.ItemResponseDto;
+import com.segatto_builder.tinyvillagehubitemservice.dto.response.PaginationResponseDto;
 import com.segatto_builder.tinyvillagehubitemservice.model.enums.Status;
 import com.segatto_builder.tinyvillagehubitemservice.service.IService;
 import jakarta.validation.Valid;
@@ -99,5 +100,14 @@ public class ItemController {
     public ResponseEntity<List<ItemResponseDto>> getItemsByCountry(@PathVariable String country) {
         List<ItemResponseDto> items = itemService.listByCountry(country);
         return ResponseEntity.ok(items);
+    }
+
+    //PAGINATED ENDPOINTS
+    @GetMapping("/paginated")
+    public ResponseEntity<PaginationResponseDto<ItemResponseDto>> getActiveItemsPaginated(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        PaginationResponseDto<ItemResponseDto> response = itemService.getActiveItemsPaginated(page, size);
+        return ResponseEntity.ok(response);
     }
 }
