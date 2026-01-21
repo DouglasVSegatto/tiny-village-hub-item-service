@@ -128,7 +128,13 @@ public class ItemService implements IService {
     }
 
     @Override
-    public PaginationResponseDto<ItemResponseDto> getActiveItemsPaginated(int page, int size) {
+    public PaginationResponseDto<ItemResponseDto> listByOwnerIdPaginated(UUID ownerId, int page, int size) {
+        Page<Item> itemPage = findByOwnerIdPaginated(ownerId, page, size);
+        return buildPaginationResponse(itemPage);
+    }
+
+    @Override
+    public PaginationResponseDto<ItemResponseDto> listActiveItemsPaginated(int page, int size) {
         Page<Item> itemPage = findActiveItemsPaginated(page, size);
         return buildPaginationResponse(itemPage);
     }
@@ -214,6 +220,8 @@ public class ItemService implements IService {
     }
 
     // Private helper methods
+
+
     private List<Item> findByNeighborhood(String neighborhood) {
         return itemRepository.findByStatusAndOwnerNeighbourhoodIgnoreCase(Status.ACTIVE, neighborhood);
     }
@@ -247,6 +255,10 @@ public class ItemService implements IService {
         );
     }
 
+    private Page<Item> findByOwnerIdPaginated(UUID ownerId, int page, int size) {
+        return itemRepository.findPageByOwnerIdAndStatusNot(ownerId, Status.DELETED, createPageable(page, size));
+    }
+
     private Page<Item> findActiveItemsPaginated(int page, int size) {
         return itemRepository.findPageByStatus(Status.ACTIVE, createPageable(page, size));
     }
@@ -266,7 +278,6 @@ public class ItemService implements IService {
     private Page<Item> findByCountryPaginated(String country, int page, int size) {
         return itemRepository.findPageByStatusAndOwnerCountryIgnoreCase(Status.ACTIVE, country, createPageable(page, size));
     }
-
 
     private Item findByIdAndValidateOwnership(String id, UUID ownerId, String userRole) {
         Item item = itemRepository.findById(id)
