@@ -103,7 +103,7 @@ public class ItemController {
     }
 
     //PAGINATED ENDPOINTS
-    @GetMapping("/paginated")
+    @GetMapping("/search/paginated")
     public ResponseEntity<PaginationResponseDto<ItemResponseDto>> getActiveItemsPaginated(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -111,8 +111,8 @@ public class ItemController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/paginated/my-items")
-    public ResponseEntity<PaginationResponseDto<ItemResponseDto>> getMyItems(
+    @GetMapping("/my-items/paginated")
+    public ResponseEntity<PaginationResponseDto<ItemResponseDto>> getMyItemsPaginated(
             @RequestHeader("X-User-Id") UUID userId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -120,8 +120,8 @@ public class ItemController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/paginated/search/neighbourhood/{neighbourhood}")
-    public ResponseEntity<PaginationResponseDto<ItemResponseDto>> getItemsByNeighbourhood(
+    @GetMapping("/search/paginated/neighbourhood/{neighbourhood}")
+    public ResponseEntity<PaginationResponseDto<ItemResponseDto>> getItemsByNeighbourhoodPaginated(
             @PathVariable String neighbourhood,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -129,8 +129,8 @@ public class ItemController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/paginated/search/city/{city}")
-    public ResponseEntity<PaginationResponseDto<ItemResponseDto>> getItemsByCity(
+    @GetMapping("/search/paginated/city/{city}")
+    public ResponseEntity<PaginationResponseDto<ItemResponseDto>> getItemsByCityPaginated(
             @PathVariable String city,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -138,8 +138,8 @@ public class ItemController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/paginated/search/state/{state}")
-    public ResponseEntity<PaginationResponseDto<ItemResponseDto>> getItemsByState(
+    @GetMapping("/search/paginated/state/{state}")
+    public ResponseEntity<PaginationResponseDto<ItemResponseDto>> getItemsByStatePaginated(
             @PathVariable String state,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -147,8 +147,8 @@ public class ItemController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/paginated/search/country/{country}")
-    public ResponseEntity<PaginationResponseDto<ItemResponseDto>> getItemsByCountry(
+    @GetMapping("/search/paginated/country/{country}")
+    public ResponseEntity<PaginationResponseDto<ItemResponseDto>> getItemsByCountryPaginated(
             @PathVariable String country,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
