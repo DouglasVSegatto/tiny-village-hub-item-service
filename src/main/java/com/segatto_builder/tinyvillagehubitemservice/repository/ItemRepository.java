@@ -17,6 +17,8 @@ public interface ItemRepository extends MongoRepository<Item, String> {
 
     List<Item> findByStatus(Status status);
 
+    Long countByOwnerIdAndStatus(UUID ownerId, Status status);
+
     // Location-based queries (List versions - existing)
     List<Item> findByStatusAndOwnerCityIgnoreCase(Status status, String city);
 

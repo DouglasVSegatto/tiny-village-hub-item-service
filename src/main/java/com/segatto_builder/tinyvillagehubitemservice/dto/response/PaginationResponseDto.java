@@ -3,8 +3,10 @@ package com.segatto_builder.tinyvillagehubitemservice.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -18,5 +20,5 @@ public class PaginationResponseDto<T> {
     private long totalElements;
     private int totalPages;
     private boolean hasNext;
-
+    private Map<String, Long> statusCount;
 }

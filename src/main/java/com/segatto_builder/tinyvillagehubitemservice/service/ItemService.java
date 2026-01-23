@@ -130,7 +130,9 @@ public class ItemService implements IService {
     @Override
     public PaginationResponseDto<ItemResponseDto> listByOwnerIdPaginated(UUID ownerId, int page, int size) {
         Page<Item> itemPage = findByOwnerIdPaginated(ownerId, page, size);
-        return buildPaginationResponse(itemPage);
+        PaginationResponseDto<ItemResponseDto> response = buildPaginationResponse(itemPage);
+        response.setStatusCount(getStatusCountsByOwnerId(ownerId));
+        return response;
     }
 
     @Override
@@ -251,7 +253,9 @@ public class ItemService implements IService {
                 itemPage.getSize(),
                 itemPage.getTotalElements(),
                 itemPage.getTotalPages(),
-                itemPage.hasNext()
+                itemPage.hasNext(),
+                //Filled manually later
+                null
         );
     }
 
@@ -289,6 +293,19 @@ public class ItemService implements IService {
         }
 
         return item;
+    }
+
+    private Map<String, Long> getStatusCountsByOwnerId(UUID ownerId) {
+        Map<String, Long> counts = new HashMap<>();
+        for (Status status : Status.values()) {
+            if (status != Status.DELETED) {
+                Long count = itemRepository.countByOwnerIdAndStatus(ownerId, status);
+                if (count > 0) {
+                    counts.put(status.name(), count);
+                }
+            }
+        }
+        return counts;
     }
 
     private void validateStatusTransition(Status from, Status to) {
