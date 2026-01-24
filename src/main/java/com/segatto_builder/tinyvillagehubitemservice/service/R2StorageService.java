@@ -98,7 +98,6 @@ public class R2StorageService implements IStorageService {
     }
 
     private String getKeyFromUrl(String url) {
-        // https://your-bucket.r2.dev/items/2024/itemId/gallery_1.jpg → items/2024/itemId/gallery_1.jpg
         String publicUrl = r2Config.getPublicUrl();
         if (!url.startsWith(publicUrl)) {
             throw new IllegalArgumentException("Invalid URL format: " + url);
