@@ -22,7 +22,7 @@ public interface ItemRepository extends MongoRepository<Item, String> {
     Long countByOwnerIdAndStatus(UUID ownerId, Status status);
 
     @Query("{ 'ownerId': ?0, 'status': { $nin: ?1 } }")
-    @Update("{ $set: { 'owner.neighbourhood': ?2, 'owner.city': ?3, 'owner.state': ?4, 'owner.country': ?5, 'owner.zipCode': ?6 } }")
+    @Update("{ $set: { 'owner.neighbourhood': ?2, 'owner.city': ?3, 'owner.state': ?4, 'owner.country': ?5 } }")
     long updateAddressForOwner(UUID ownerId, List<Status> excludedStatuses, String neighbourhood, String city, String state, String country);
 
     // Location-based queries (List versions - existing)
