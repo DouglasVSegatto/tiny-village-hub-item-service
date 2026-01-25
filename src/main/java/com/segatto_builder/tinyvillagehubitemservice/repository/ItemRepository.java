@@ -5,6 +5,8 @@ import com.segatto_builder.tinyvillagehubitemservice.model.enums.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.mongodb.repository.Update;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,6 +20,10 @@ public interface ItemRepository extends MongoRepository<Item, String> {
     List<Item> findByStatus(Status status);
 
     Long countByOwnerIdAndStatus(UUID ownerId, Status status);
+
+    @Query("{ 'ownerId': ?0, 'status': { $nin: ?1 } }")
+    @Update("{ $set: { 'owner.neighbourhood': ?2, 'owner.city': ?3, 'owner.state': ?4, 'owner.country': ?5, 'owner.zipCode': ?6 } }")
+    long updateAddressForOwner(UUID ownerId, List<Status> excludedStatuses, String neighbourhood, String city, String state, String country);
 
     // Location-based queries (List versions - existing)
     List<Item> findByStatusAndOwnerCityIgnoreCase(Status status, String city);

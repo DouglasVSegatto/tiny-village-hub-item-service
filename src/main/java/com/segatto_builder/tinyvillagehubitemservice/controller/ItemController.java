@@ -1,6 +1,7 @@
 package com.segatto_builder.tinyvillagehubitemservice.controller;
 
 import com.segatto_builder.tinyvillagehubitemservice.dto.request.CreateRequestDto;
+import com.segatto_builder.tinyvillagehubitemservice.dto.request.UpdateAddressRequestDto;
 import com.segatto_builder.tinyvillagehubitemservice.dto.request.UpdateRequestDto;
 import com.segatto_builder.tinyvillagehubitemservice.dto.response.ItemResponseDto;
 import com.segatto_builder.tinyvillagehubitemservice.dto.response.PaginationResponseDto;
@@ -56,6 +57,14 @@ public class ItemController {
             @RequestHeader("X-User-Id") UUID userId,
             @RequestHeader("X-User-Role") String userRole) {
         itemService.updateStatus(id, status, userId, userRole);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/my-items/address")
+    public ResponseEntity<Void> updateAddress(
+            @Valid @RequestBody UpdateAddressRequestDto request,
+            @RequestHeader("X-User-Id") UUID userId) {
+        itemService.updateAddress(request, userId);
         return ResponseEntity.ok().build();
     }
 

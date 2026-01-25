@@ -1,6 +1,7 @@
 package com.segatto_builder.tinyvillagehubitemservice.service;
 
 import com.segatto_builder.tinyvillagehubitemservice.dto.request.CreateRequestDto;
+import com.segatto_builder.tinyvillagehubitemservice.dto.request.UpdateAddressRequestDto;
 import com.segatto_builder.tinyvillagehubitemservice.dto.request.UpdateRequestDto;
 import com.segatto_builder.tinyvillagehubitemservice.dto.response.ItemResponseDto;
 import com.segatto_builder.tinyvillagehubitemservice.dto.response.PaginationResponseDto;
@@ -19,6 +20,8 @@ public interface IService {
     void delete(String id, UUID ownerId, String userRole);
 
     void updateStatus(String id, Status newStatus, UUID ownerId, String userRole);
+
+    void updateAddress(UpdateAddressRequestDto dto, UUID ownerId);
 
     ItemResponseDto findById(String itemId);
 

@@ -1,6 +1,7 @@
 package com.segatto_builder.tinyvillagehubitemservice.service;
 
 import com.segatto_builder.tinyvillagehubitemservice.dto.request.CreateRequestDto;
+import com.segatto_builder.tinyvillagehubitemservice.dto.request.UpdateAddressRequestDto;
 import com.segatto_builder.tinyvillagehubitemservice.dto.request.UpdateRequestDto;
 import com.segatto_builder.tinyvillagehubitemservice.dto.response.ItemResponseDto;
 import com.segatto_builder.tinyvillagehubitemservice.dto.response.PaginationResponseDto;
@@ -54,6 +55,20 @@ public class ItemService implements IService {
                 oldStatus, newStatus, ownerId, userRole, item.getId());
 
         //TODO: Handle Completed status change for questioner or rating etc...
+    }
+
+    @Override
+    public void updateAddress(UpdateAddressRequestDto dto, UUID ownerId) {
+        List<Status> excludeStatus = List.of(Status.DELETED, Status.COMPLETED);
+        long updatedCount = itemRepository.updateAddressForOwner(
+                ownerId,
+                excludeStatus,
+                dto.getNeighborhood(),
+                dto.getCity(),
+                dto.getState(),
+                dto.getCountry()
+        );
+        log.info("UPDATED_ADDRESS for {} items by userId: {}", updatedCount, ownerId);
     }
 
     @Override
